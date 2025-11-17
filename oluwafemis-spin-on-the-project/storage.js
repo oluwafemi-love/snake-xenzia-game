@@ -1,40 +1,37 @@
-class GameStorage {
-  loadAllPlayers() {
-    return JSON.parse(localStorage.getItem("Players")) || {};
+class Storage {
+  constructor() {
+    this.key = "snakeGameScores";
+    this.data = JSON.parse(localStorage.getItem(this.key)) || {};
   }
 
+  // Save the player’s score
   savePlayerScore(playerName, score) {
-    const players = this.loadAllPlayers();
+    if (!playerName) return;
 
-    // Save the highest score ONLY for that player
-    if (!players[playerName] || score > players[playerName]) {
-      players[playerName] = score;
+    if (!this.data[playerName] || score > this.data[playerName]) {
+      this.data[playerName] = score;
+      this._commit();
     }
-
-    localStorage.setItem("Players", JSON.stringify(players));
   }
 
+  // Return the highest scoring player ever recorded
   getHighestScoringPlayer() {
-    const players = this.loadAllPlayers();
-    
-    let bestPlayer = null;
+    let bestPlayer = "None";
     let bestScore = 0;
 
-    for (const name in players) {
-      if (players[name] > bestScore) {
-        bestPlayer = name;
-        bestScore = players[name];
+    for (const [player, score] of Object.entries(this.data)) {
+      if (score > bestScore) {
+        bestScore = score;
+        bestPlayer = player;
       }
     }
 
     return { bestPlayer, bestScore };
   }
 
-   // Get score for a specific player
-  getPlayerScore(playerName) {
-    const players = this.loadAllPlayers();
-    return players[playerName] || 0;
+  _commit() {
+    localStorage.setItem(this.key, JSON.stringify(this.data));
   }
 }
 
-export default GameStorage;
+export default Storage;

@@ -1,13 +1,12 @@
 // Initialise Storage
-import GameStorage from "./storage.js";
-const storage = new GameStorage();
-// const getSavedGameData = storage.getGameData();
+import Storage from "./storage.js";
+const storage = new Storage();
 
 // DEFINE HTML ELEMENTS
 const board = document.getElementById("game-board");
 const infoText = document.querySelector(".info-text");
 const startGameBtn = document.getElementById("start-game");
-const score = document.getElementById("score");
+const scoreEl = document.getElementById("score");
 const highScoreText = document.getElementById("high-score");
 const playerName = document.getElementById("player-name");
 
@@ -21,15 +20,12 @@ let gameSpeedDelay = 200;
 let gameStarted = false;
 let highScore = 0;
 
-// DISPLAY THE NEEDED INFO ON THE UI
-populateUI();
-
 // DRAW GAME MAP, SNAKE, FOOD
 function draw() {
   board.innerHTML = "";
   drawSnake();
   drawFood();
-  updateScore();
+  updateScoreOnTheUI();
 }
 
 //Draw Snake
@@ -39,6 +35,15 @@ function drawSnake() {
     setPosition(snakeElement, segment);
     board.appendChild(snakeElement);
   });
+}
+
+// DRAW FOOD FUNCTION
+function drawFood() {
+  if (gameStarted) {
+    const foodElement = createElement("div", "food");
+    setPosition(foodElement, food);
+    board.appendChild(foodElement);
+  }
 }
 
 //Create a snake or food
@@ -52,15 +57,6 @@ function createElement(tag, className) {
 function setPosition(element, position) {
   element.style.gridColumn = position.x;
   element.style.gridRow = position.y;
-}
-
-// DRAW FOOD FUNCTION
-function drawFood() {
-  if (gameStarted) {
-    const foodElement = createElement("div", "food");
-    setPosition(foodElement, food);
-    board.appendChild(foodElement);
-  }
 }
 
 // GENERATE FOOD
@@ -115,7 +111,12 @@ function startGame() {
   }, gameSpeedDelay);
 }
 
-// Keypress Event Listener
+function stopGame() {
+  clearInterval(gameInterval);
+  gameStarted = false;
+}
+
+//Keypress Event Listener
 function handleKeyPress(event) {
   if (
     (!gameStarted && event.code === "Space") ||
@@ -139,12 +140,11 @@ function handleKeyPress(event) {
     }
   }
 }
+document.addEventListener("keydown", handleKeyPress);
+// Handle Button Click
 function startGameByClick() {
   if (!gameStarted) startGame();
 }
-
-document.addEventListener("keydown", handleKeyPress);
-
 startGameBtn.addEventListener("click", startGameByClick);
 
 // Increase Speed
@@ -187,57 +187,26 @@ function resetGame() {
   // Show message
   infoText.textContent = `Game Over! Highest score is ${bestScore} by ${bestPlayer}.`;
 
-  
+  updateHighScoreOnTheUI();
   stopGame();
-
-  // When Game has stopped set the score and highscore
-  if(gameStarted){
-    score.textContent = `Score: ${currentScore.toString().padStart(3, "0")}`;
-    highScoreText.textContent = `High Score: ${bestScore
-    .toString()
-    .padStart(3, "0")}`;
-  }
 
   // Reset data for next play
   snake = [{ x: 10, y: 10 }];
   food = generateFood();
   direction = "right";
   gameSpeedDelay = 200;
-  updateScore();
+  updateScoreOnTheUI();
 }
 
 //Update Score
-function updateScore() {
+function updateScoreOnTheUI() {
   const currentScore = snake.length - 1;
-  score.textContent = `Score: ${currentScore.toString().padStart(3, "0")}`;
-  return currentScore;
+  scoreEl.textContent = `Score: ${currentScore.toString().padStart(3, "0")}`;
 }
 
-function updateHighScore() {
-  const currentScore = snake.length - 1;
-  const name = playerName.textContent.trim();
-
-  if (currentScore > highScore) {
-    highScore = currentScore;
-    highScoreText.textContent = `High Score: ${highScore
-      .toString()
-      .padStart(3, "0")}`;
-  }
-  // New Method Save the highscore per player
-  storage.savePlayerScore(name, highScore);
-
-  highScoreText.style.display = "block";
-}
-
-function stopGame() {
-  clearInterval(gameInterval);
-  gameStarted = false;
-}
-
-function populateUI() {
-  const { bestPlayer, bestScore } = storage.getHighestScoringPlayer();
-
-  highScoreText.textContent = `High Score: ${bestScore
+function updateHighScoreOnTheUI() {
+  const { bestScore } = storage.getHighestScoringPlayer();
+  highScoreText.textContent = `Best Score: ${bestScore
     .toString()
     .padStart(3, "0")}`;
 }
