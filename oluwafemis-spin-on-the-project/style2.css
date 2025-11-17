@@ -1,0 +1,127 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.wrapa {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: "Courier New", Courier, monospace;
+  background-color: hsl(171deg 43 15) ;
+}
+
+.game-board-wrapa{
+  width: 450px;
+  height: 450px;
+  background-color: #0A241F;
+  border-radius: 18px;
+}
+
+#game-board {
+  border-radius: 100px;
+  display: grid;
+  grid-template-columns: repeat(20, 20px);
+  grid-template-rows: repeat(20, 20px);
+  margin: 5px;
+}
+
+.rhs{
+  width: 400px;
+  height: 400px;
+  background-color: hsla(168, 57%, 9%, 0.238);
+  border-radius: 18px;
+  padding: 30px;
+}
+
+.info {
+  background-color: hsl(168deg 57 9) ;
+  color: #fcfcfc;
+  padding: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  
+  .info-text{
+    font-size: 0.8rem;
+  }
+}
+
+#player-name{
+  width: fit-content;
+  font-size: 1rem;
+  margin-left: auto;
+  color: #fcfcfc;
+}
+
+.score-wrapa {
+ margin-bottom: 30px;
+
+ h2{
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fcfcfc
+ }
+}
+.score-and-highscore {
+  display: flex;
+  justify-content: space-between;
+}
+#score,
+#high-score {
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin: 10px 0;
+  color: #abb78a;
+}
+#high-score {
+  /* display: none; */
+}
+
+.game-border-3,
+#logo {
+  background-color: #c4cfa3;
+}
+
+.snake {
+  border: #42d9ad 1px dotted;
+  background-color: #42d9ad;
+}
+
+
+.food {
+  /* background-color: #dedede; */
+  /* border: #999 5px solid; */
+  width: 8px;
+  height: 8px;
+  background-color: hsla(172, 81%, 60%, 1);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px hsla(172, 81%, 60%, 0.3),
+    0 0 0 6px hsla(172, 81%, 60%, 0.2);
+}
+
+#logo {
+  position: absolute;
+  margin-bottom: 58px;
+}
+
+.button-wrapa{
+  width: fit-content;
+  margin: 0 auto;
+}
+button#start-game{
+  font-size: 1rem;
+  padding: 30px 100px;
+  border: none;
+  border-radius: 12px;
+  background-color: #ffb86a;
+  cursor: pointer;
+  box-shadow: 0px 6px 0px #b9ab9b;
+}
+
